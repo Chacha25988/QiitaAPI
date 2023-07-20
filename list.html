@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Qiita API</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ここにサイト説明を入れます">
+<meta name="keywords" content="キーワード１,キーワード２,キーワード３,キーワード４,キーワード５">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/openclose.js"></script>
+<script src="js/fixmenu_pagetop.js"></script>
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body>
+<header>
+</header>
+
+<div id="contents" class="inner">
+<div id="contents-in">
+
+<div id="main">
+  
+    
+    <h1>Qiita 投稿</h1>
+  <ul id="trend-list"></ul>
+  <form id="postForm">
+    <label for="title">タイトル:</label>
+    <input type="text" id="title" required><br>
+
+    <label for="body">本文:</label><br>
+    <textarea id="body" rows="5" required></textarea><br>
+
+    <label for="tags">タグ（カンマ区切り）:</label>
+    <input type="text" id="tags" required><br>
+
+    <button type="submit">投稿する</button>
+  </form>
+
+  <script>
+    document.getElementById('postForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // Qiita APIのエンドポイントとアクセストークン
+      const url = 'https://qiita.com/api/v2/items';
+      const accessToken = 'YOUR_ACCESS_TOKEN';
+
+      // フォームから記事情報を取得
+      const title = document.getElementById('title').value;
+      const body = document.getElementById('body').value;
+      const tags = document.getElementById('tags').value.split(',');
+
+      // 記事情報をオブジェクトとして整理
+      const data = {
+        title: title,
+        body: body,
+        tags: tags.map(tag => ({ name: tag.trim() }))
+      };
+
+      // Qiita APIに記事情報を送信
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer 31664c23aa1195b404934bf8c5876f134d24389f`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (response.status === 201) {
+          console.log('記事が投稿されました。');
+        } else {
+          console.error('記事の投稿に失敗しました。');
+        }
+      })
+      .catch(error => {
+        console.error('エラー:', error);
+      });
+    });
+  </script>
+  
+</div>
+<!--/#main-->
+
+<div id="sub">
+  <div class="wrap">
+    <div class="content">
+        <figure class="profile-image"><h1>マイページ画像</h1>
+  
+          <div id="profile-image"></div>
+          
+          <script>
+            const apiToken = 'YOUR_API_TOKEN';
+            const userId = 'YOUR_USER_ID';
+        
+            const url = `https://qiita.com/api/v2/users/chacha2588`;
+            const headers = {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer 31664c23aa1195b404934bf8c5876f134d24389f`,
+            };
+        
+            const profileImageElement = document.getElementById('profile-image');
+        
+            fetch(url, { headers })
+              .then(response => response.json())
+              .then(data => {
+                const profileImageUrl = data.profile_image_url;
+                const imageElement = document.createElement('img');
+                imageElement.src = profileImageUrl;
+                imageElement.alt = 'マイページ画像';
+                profileImageElement.appendChild(imageElement);
+              })
+              .catch(error => {
+                console.error('APIリクエストエラー:', error);
+              });
+          </script>
+        </figure>
+
+        <p id="user-name"></p>
+
+        <script>
+          function getUserName(user_id, access_token) {
+            const url = `https://qiita.com/api/v2/users/chacha2588`;
+            const headers = {
+              "Authorization": `Bearer 31664c23aa1195b404934bf8c5876f134d24389f`,
+              "Content-Type": "application/json"
+            };
+      
+            return fetch(url, {
+              headers: headers
+            })
+            .then(response => {
+              if (response.ok) {
+                return response.json();
+              } else {
+                throw new Error("Failed to retrieve user's name.");
+              }
+            })
+            .then(user_data => {
+              const user_name = user_data.name;
+              return user_name;
+            })
+            .catch(error => {
+              console.error(error);
+              return null;
+            });
+          }
+      
+          const user_id = "qiita";
+          const access_token = "YOUR_ACCESS_TOKEN";
+      
+          getUserName(user_id, access_token)
+            .then(user_name => {
+              if (user_name) {
+                const userNameElement = document.getElementById("user-name");
+                userNameElement.textContent = user_name;
+              } else {
+                console.log("Failed to retrieve the user's name.");
+              }
+            });
+        </script>
+
+    </div>
+  </div>
+<nav>
+<h2>Contents</h2>
+<ul class="submenu">
+<li><a href="index.html">トレンド</a></li>
+<li><a href="link.html">投稿履歴</a></li>
+<li><a href="list.html">投稿</a></li>
+</ul>
+</nav>
+
+
+</div>
+<!--/#sub-->
+
+</div>
+<!--/#contents-in-->
+
+</div>
+<!--/#contents-->
+
+<footer>
+
+
+</footer>
+</body>
+</html>

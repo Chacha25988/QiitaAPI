@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Qiita API</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="ここにサイト説明を入れます">
+<meta name="keywords" content="キーワード１,キーワード２,キーワード３,キーワード４,キーワード５">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/openclose.js"></script>
+<script src="js/fixmenu_pagetop.js"></script>
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body>
+<header>
+</header>
+
+
+<div id="contents" class="inner">
+<div id="contents-in">
+
+<div id="main">
+  
+  <h1>Qiitaトレンド記事</h1>
+  <ul id="trend-articles"></ul>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const url = 'https://qiita.com/api/v2/items';
+    const params = {
+      sort: 'count',    // トレンドの並び順を指定
+      per_page: 10,     // 取得する記事の数を指定
+    };
+
+    const headers = {
+      Authorization: 'Bearer accdfa57d3dab628d83687e4bf0286ec18be69d7',
+    };
+
+    axios
+      .get(url, { params, headers })
+      .then(response => {
+        const data = response.data;
+        const trendArticles = document.getElementById('trend-articles');
+        // 必要な情報を抽出してリストアイテムとして表示する
+        data.forEach(item => {
+          const listItem = document.createElement('li');
+          listItem.textContent = item.title;
+          trendArticles.appendChild(listItem);
+        });
+      })
+      .catch(error => {
+        console.error('エラーが発生しました:', error);
+      });
+  </script>
+</section>
+</div>
+<!--/#main-->
+
+<div id="sub">
+  <div class="wrap">
+    <div class="content">
+        <figure class="profile-image"><figure class="profile-image">
+          <h1>マイページ画像</h1>
+  
+          <div id="profile-image"></div>
+          
+          <script>
+            const apiToken = 'YOUR_API_TOKEN';
+            const userId = 'YOUR_USER_ID';
+        
+            const url2 = `https://qiita.com/api/v2/users/chacha2588`;
+            const headers2 = {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer 31664c23aa1195b404934bf8c5876f134d24389f`,
+            };
+        
+            const profileImageElement = document.getElementById('profile-image');
+        
+            fetch(url2, { headers })
+              .then(response => response.json())
+              .then(data => {
+                const profileImageUrl = data.profile_image_url;
+                const imageElement = document.createElement('img');
+                imageElement.src = profileImageUrl;
+                imageElement.alt = 'マイページ画像';
+                profileImageElement.appendChild(imageElement);
+              })
+              .catch(error => {
+                console.error('APIリクエストエラー:', error);
+              });
+          </script>
+        </figure>
+
+        <p id="user-name"></p>
+
+        <script>
+          function getUserName(user_id, access_token) {
+            const url = `https://qiita.com/api/v2/users/chacha2588`;
+            const headers = {
+              "Authorization": `Bearer 31664c23aa1195b404934bf8c5876f134d24389f`,
+              "Content-Type": "application/json"
+            };
+      
+            return fetch(url, {
+              headers: headers
+            })
+            .then(response => {
+              if (response.ok) {
+                return response.json();
+              } else {
+                throw new Error("Failed to retrieve user's name.");
+              }
+            })
+            .then(user_data => {
+              const user_name = user_data.name;
+              return user_name;
+            })
+            .catch(error => {
+              console.error(error);
+              return null;
+            });
+          }
+      
+          const user_id = "qiita";
+          const access_token = "YOUR_ACCESS_TOKEN";
+      
+          getUserName(user_id, access_token)
+            .then(user_name => {
+              if (user_name) {
+                const userNameElement = document.getElementById("user-name");
+                userNameElement.textContent = user_name;
+              } else {
+                console.log("Failed to retrieve the user's name.");
+              }
+            });
+        </script>
+
+    </div>
+  </div>
+<nav>
+<h2>Contents</h2>
+<ul class="submenu">
+<li><a href="index.html">トレンド</a></li>
+<li><a href="link.html">投稿履歴</a></li>
+<li><a href="list.html">投稿</a></li>
+</ul>
+</nav>
+
+
+</div>
+<!--/#sub-->
+
+</div>
+<!--/#contents-in-->
+
+</div>
+<!--/#contents-->
+
+<footer>
+
+</footer>
+
+</body>
+</html>
